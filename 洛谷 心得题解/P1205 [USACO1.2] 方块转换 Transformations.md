@@ -62,3 +62,112 @@
 题目翻译来自 NOCOW。
 
 USACO Training Section 1.2
+
+## 心得
+
+这是我做的第一道提高题（虽然是提高-），但仍旧十分具备纪念性质！咱们才不管什么算法呢，直接模拟七种情况，把方阵转过来，然后再谈比较的事情。因为当时刚刚接触C语言不久，所以代码十分的青涩，调试了不知道多久，最后甚至直接上C++（好像是为了偷懒不想用标准输入？）。好在最后还是过了，而且是在没有借助外力的情况下第一道独立的提高-！可喜可贺，可喜可贺！
+
+## AC代码
+```c
+#include<stdio.h>
+#include<iostream>
+using namespace std;
+int main() {
+    char n0[11][11] = {};
+    char m0[11][11] = {};
+    char r[11][11] = {};
+    int condition = 1, judge = 1;
+    int no_change = 0;
+    int n;
+
+    cin >> n;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cin >> n0[i][j];
+        }
+        getchar();
+    }
+    //初始矩阵输入
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cin >> m0[i][j];
+        }
+        getchar();
+    }
+    //判定矩阵输入
+
+    for (condition; condition <= 4; condition++) {
+        judge = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                r[i][n + 1 - j] = n0[j][i];
+                if (r[i][n + 1 - j] != m0[i][n + 1 - j])
+                    judge = 0;
+            }
+        }
+        if (judge == 1) {
+            if (condition == 4)
+                no_change = 1;
+            else {
+                cout << condition;
+                return 0;
+            }
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                n0[i][j] = r[i][j];
+            }
+        }
+    }
+    //四次旋转
+
+    judge = 1;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            r[i][n + 1 - j] = n0[i][j];
+        }
+    }
+    //初始矩阵反射
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            n0[i][j] = r[i][j];
+            if (r[i][j] != m0[i][j])
+                judge = 0;
+        }
+    }
+    if (judge == 1) {
+        cout << 4;
+        return 0;
+    }
+    //反射判断
+
+    judge = 1;
+    for (int k = 1; k < 4; k++) {
+        judge = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                r[i][n + 1 - j] = n0[j][i];
+                if (r[i][n + 1 - j] != m0[i][n + 1 - j])
+                    judge = 0;
+            }
+        }
+        if (judge == 1) {
+            cout << 5;
+            return 0;
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                n0[i][j] = r[i][j];
+            }
+        }
+    }
+    //反射后旋转
+    if (no_change == 1) {
+        cout << 6;
+    }
+    else
+        cout << 7;
+    return 0;
+}
+```
